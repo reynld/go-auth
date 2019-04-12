@@ -91,14 +91,13 @@ func (s *Server) RunMigrations() {
 		log.Fatal(err)
 	}
 
-	m, err := migrate.NewWithDatabaseInstance("file://migration", "postgres", driver)
-
+	m, err := migrate.NewWithDatabaseInstance("file://migrations", "postgres", driver)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// if err := m.Run(); err != nil && err != migrate.ErrNoChange {
-	if err := m.Run(); err != nil {
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		fmt.Print("migration fialed\n")
 		log.Fatal(err)
 	}
 }
