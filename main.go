@@ -16,7 +16,7 @@ func main() {
 	godotenv.Load()
 	serve := flag.Bool("serve", false, "runs server")
 	migrate := flag.Bool("migrate", false, "migrates database")
-	// seed := flag.Bool("seed", false, "seeds database")
+	seed := flag.Bool("seed", false, "seeds database")
 	flag.Parse()
 
 	if len(os.Args) > 1 {
@@ -40,6 +40,9 @@ func main() {
 		}
 		if *migrate {
 			s.RunMigrations()
+		}
+		if *seed {
+			s.RunSeeds()
 		}
 
 	} else {
