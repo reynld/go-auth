@@ -39,6 +39,7 @@ func (s *Server) initializeRoutes() {
 
 	s.Router.HandleFunc("/", GetServerIsUp).Methods("GET")
 	s.Router.HandleFunc("/signin", s.Signin).Methods("POST")
+	s.Router.HandleFunc("/register", s.Register).Methods("POST")
 	s.Router.HandleFunc("/welcome", s.Protected(Welcome)).Methods("GET")
 	// s.router.HandleFunc("/referesh", auth.Protected(auth.Refresh)).Methods("GET")
 }
