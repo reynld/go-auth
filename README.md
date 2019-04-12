@@ -1,6 +1,10 @@
 # go-auth
 JWT authentication system in golang
 
-Initial tutorial
-
-https://www.sohamkamani.com/blog/golang/2019-01-01-jwt-authentication/
+## Enviroment Variables
+- ``PORT``- your server PORT
+- ``DB_PORT``- your database PORT
+- ``DB_NAME`` - your database name
+- ``DB_HOST`` - your database Host URL
+- ``DB_USER`` - your database user
+- ``DB_PASSWORD`` - your database password

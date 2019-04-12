@@ -1,30 +1,49 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
-	"net/http"
+	"os"
 
-	"github.com/reynld/go-auth/pkg/auth"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
+	"github.com/reynld/go-auth/pkg/server"
 )
 
-// Welcome route handler
-func Welcome(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	username, ok := ctx.Value(string("username")).(string)
-	if !ok {
-		w.WriteHeader(http.StatusBadRequest)
-	}
-	w.Write([]byte(fmt.Sprintf("Welcome %s!", username)))
-}
-
 func main() {
+	godotenv.Load()
+	serve := flag.Bool("serve", false, "runs server")
+	migrate := flag.Bool("migrate", false, "migrates database")
+	// seed := flag.Bool("seed", false, "seeds database")
+	flag.Parse()
 
-	http.HandleFunc("/signin", auth.Signin)
-	http.HandleFunc("/welcome", auth.Protected(Welcome))
-	// http.HandleFunc("/refresh", Refresh)
+	if len(os.Args) > 1 {
 
-	// start the server on port 8000
-	fmt.Printf("server live on port 9001\n")
-	log.Fatal(http.ListenAndServe(":9001", nil))
+		if flag.NFlag() != 1 {
+			fmt.Println("pass just one argument")
+			flag.Usage()
+			os.Exit(1)
+		}
+
+		s := server.Server{}
+		s.Initialize()
+
+		if *serve {
+			port := os.Getenv("PORT")
+			if port == "" {
+				log.Fatal("PORT env variable is required\n")
+			}
+			fmt.Printf("server listening on port: %s\n", port)
+			s.Run(fmt.Sprintf(":%s", port))
+		}
+		if *migrate {
+			s.RunMigrations()
+		}
+
+	} else {
+		fmt.Println("pass at least one argument")
+		flag.Usage()
+	}
 }
