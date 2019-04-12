@@ -96,7 +96,7 @@ func (s *Server) RunMigrations() {
 		log.Fatal(err)
 	}
 
-	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+	if err := m.Force(1); err != nil && err != migrate.ErrNoChange {
 		fmt.Print("migration failed\n")
 		log.Fatal(err)
 	}
