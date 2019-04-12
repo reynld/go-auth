@@ -1,4 +1,4 @@
-package auth
+package server
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 )
 
 // Protected middleware
-func Protected(next http.HandlerFunc) http.HandlerFunc {
+func (s *Server) Protected(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// We can obtain the session token from the requests cookies, which come with every request
 		c, err := r.Cookie("token")
@@ -34,7 +34,8 @@ func Protected(next http.HandlerFunc) http.HandlerFunc {
 		// if the token is invalid (if it has expired according to the expiry time we set on sign in),
 		// or if the signature does not match
 		tkn, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
-			return jwtKey, nil
+
+			return getJWTKey(), nil
 		})
 		if !tkn.Valid {
 			w.WriteHeader(http.StatusUnauthorized)

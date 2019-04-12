@@ -1,20 +1,27 @@
-package auth
+package server
 
 import (
 	"net/http"
+	"os"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
+//getJWTKey returns JWTiKey
+func getJWTKey() []byte {
+	return []byte(os.Getenv("JWT_KEY"))
+}
+
 // GenerateToken creates JWT
-func GenerateToken(username string) (JWTResponse, error) {
+func GenerateToken(username string, id int) (JWTResponse, error) {
 	// Declare the expiration time of the token
 	// here, we have kept it as 5 minutes
 	expirationTime := time.Now().Add(5 * time.Hour)
 	// Create the JWT claims, which includes the username and expiry time
 	claims := &Claims{
 		Username: username,
+		ID:       id,
 		StandardClaims: jwt.StandardClaims{
 			// In JWT, the expiry time is expressed as unix milliseconds
 			ExpiresAt: expirationTime.Unix(),
@@ -24,7 +31,7 @@ func GenerateToken(username string) (JWTResponse, error) {
 	// Declare the token with the algorithm used for signing, and the claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	// Create the JWT string
-	tokenString, err := token.SignedString(jwtKey)
+	tokenString, err := token.SignedString(getJWTKey())
 	if err != nil {
 		return JWTResponse{}, err
 	}
@@ -46,7 +53,7 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 	tknStr := c.Value
 	claims := &Claims{}
 	tkn, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
-		return jwtKey, nil
+		return getJWTKey(), nil
 	})
 	if !tkn.Valid {
 		w.WriteHeader(http.StatusUnauthorized)
@@ -74,7 +81,7 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 	expirationTime := time.Now().Add(5 * time.Minute)
 	claims.ExpiresAt = expirationTime.Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(jwtKey)
+	tokenString, err := token.SignedString(getJWTKey())
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

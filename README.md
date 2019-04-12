@@ -8,3 +8,5 @@ JWT authentication system in golang
 - ``DB_HOST`` - your database Host URL
 - ``DB_USER`` - your database user
 - ``DB_PASSWORD`` - your database password
+- ``ENVIROMENT`` - sets enviroment either `PROD` or `DEV`
+- ``JWT_KEY`` - jwt secret key
