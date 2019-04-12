@@ -2,18 +2,10 @@ package server
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"golang.org/x/crypto/bcrypt"
 )
-
-var users = map[string]string{
-	"user1": "password1",
-	"user2": "password2",
-}
-
-var jwtKey = []byte("my_secret_key")
 
 // Signin the Signin handler
 func (s *Server) Signin(w http.ResponseWriter, r *http.Request) {
@@ -32,7 +24,6 @@ func (s *Server) Signin(w http.ResponseWriter, r *http.Request) {
 		`SELECT u.id, u.username, u.password FROM users u WHERE username = $1`,
 		creds.Username).Scan(&user.ID, &user.Username, &user.Password)
 	if err != nil {
-		fmt.Printf("error: %s\n", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

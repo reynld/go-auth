@@ -96,8 +96,10 @@ func (s *Server) RunMigrations() {
 		log.Fatal(err)
 	}
 
-	if err := m.Force(1); err != nil && err != migrate.ErrNoChange {
-		fmt.Print("migration failed\n")
+	if err := m.Down(); err != nil && err != migrate.ErrNoChange {
+		log.Fatal(err)
+	}
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
 		log.Fatal(err)
 	}
 }
@@ -118,9 +120,8 @@ func (s *Server) RunSeeds() {
 		RETURNING id
 	`, username, string(hash))
 
-	result, err := s.DB.Exec(query)
+	_, err = s.DB.Exec(query)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Print(result)
 }

@@ -34,7 +34,8 @@ func (s *Server) Protected(next http.HandlerFunc) http.HandlerFunc {
 		// if the token is invalid (if it has expired according to the expiry time we set on sign in),
 		// or if the signature does not match
 		tkn, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
-			return jwtKey, nil
+
+			return getJWTKey(), nil
 		})
 		if !tkn.Valid {
 			w.WriteHeader(http.StatusUnauthorized)
