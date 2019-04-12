@@ -1,4 +1,4 @@
-package auth
+package server
 
 import (
 	"net/http"
@@ -8,13 +8,14 @@ import (
 )
 
 // GenerateToken creates JWT
-func GenerateToken(username string) (JWTResponse, error) {
+func GenerateToken(username string, id int) (JWTResponse, error) {
 	// Declare the expiration time of the token
 	// here, we have kept it as 5 minutes
 	expirationTime := time.Now().Add(5 * time.Hour)
 	// Create the JWT claims, which includes the username and expiry time
 	claims := &Claims{
 		Username: username,
+		ID:       id,
 		StandardClaims: jwt.StandardClaims{
 			// In JWT, the expiry time is expressed as unix milliseconds
 			ExpiresAt: expirationTime.Unix(),

@@ -6,6 +6,8 @@ github.com/golang-migrate/migrate/v4
 github.com/golang-migrate/migrate/v4/database/postgres
 github.com/golang-migrate/migrate/v4/source
 github.com/golang-migrate/migrate/v4/database
+# github.com/gorilla/handlers v1.4.0
+github.com/gorilla/handlers
 # github.com/gorilla/mux v1.7.1
 github.com/gorilla/mux
 # github.com/hashicorp/errwrap v1.0.0

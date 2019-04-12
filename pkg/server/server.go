@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -22,5 +23,5 @@ func (s *Server) Initialize() {
 
 // Run runs the router
 func (s *Server) Run(port string) {
-	log.Fatal(http.ListenAndServe(port, s.Router))
+	log.Fatal(http.ListenAndServe(port, handlers.CORS()(s.Router)))
 }

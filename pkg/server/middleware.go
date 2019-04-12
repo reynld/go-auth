@@ -1,4 +1,4 @@
-package auth
+package server
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 )
 
 // Protected middleware
-func Protected(next http.HandlerFunc) http.HandlerFunc {
+func (s *Server) Protected(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// We can obtain the session token from the requests cookies, which come with every request
 		c, err := r.Cookie("token")
