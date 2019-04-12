@@ -86,21 +86,19 @@ func (s *Server) initializeDB() {
 
 // RunMigrations runs migrations on database
 func (s *Server) RunMigrations() {
-	// Run migrations
 	driver, err := postgres.WithInstance(s.DB, &postgres.Config{})
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	m, err := migrate.NewWithDatabaseInstance(
-		"file://./migrations",
-		"postgres", driver)
+	m, err := migrate.NewWithDatabaseInstance("file://migration", "postgres", driver)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if err := m.Run(); err != nil && err != migrate.ErrNoChange {
+	// if err := m.Run(); err != nil && err != migrate.ErrNoChange {
+	if err := m.Run(); err != nil {
 		log.Fatal(err)
 	}
 }
