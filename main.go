@@ -9,6 +9,7 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	"github.com/reynld/go-auth/pkg/db"
 	"github.com/reynld/go-auth/pkg/server"
 )
 
@@ -70,10 +71,10 @@ func main() {
 			s.Run(fmt.Sprintf(":%s", port))
 		}
 		if *migrate {
-			s.RunMigrations()
+			db.RunMigrations(s.DB)
 		}
 		if *seed {
-			s.RunSeeds()
+			db.RunSeeds(s.DB)
 		}
 
 	} else {

@@ -1,4 +1,4 @@
-package server
+package db
 
 import (
 	"database/sql"
@@ -67,26 +67,28 @@ func getDBUri() (string, error) {
 	return dburi, nil
 }
 
-// initializeDB connects to DB
-func (s *Server) initializeDB() {
+// InitializeDB connects to DB
+func InitializeDB() *sql.DB {
 	dburi, err := getDBUri()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	s.DB, err = sql.Open("postgres", dburi)
+	db, err := sql.Open("postgres", dburi)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if err = s.DB.Ping(); err != nil {
+	if err = db.Ping(); err != nil {
 		log.Fatal(err)
 	}
+
+	return db
 }
 
 // RunMigrations runs migrations on database
-func (s *Server) RunMigrations() {
-	driver, err := postgres.WithInstance(s.DB, &postgres.Config{})
+func RunMigrations(db *sql.DB) {
+	driver, err := postgres.WithInstance(db, &postgres.Config{})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -105,7 +107,7 @@ func (s *Server) RunMigrations() {
 }
 
 // RunSeeds seeds DB with deafult user and password
-func (s *Server) RunSeeds() {
+func RunSeeds(db *sql.DB) {
 	password := "pass"
 	username := "rey"
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), 10)
@@ -120,7 +122,7 @@ func (s *Server) RunSeeds() {
 		RETURNING id
 	`, username, string(hash))
 
-	_, err = s.DB.Exec(query)
+	_, err = db.Exec(query)
 	if err != nil {
 		log.Fatal(err)
 	}

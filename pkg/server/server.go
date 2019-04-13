@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/reynld/go-auth/pkg/db"
 )
 
 // Server struct
@@ -17,7 +18,7 @@ type Server struct {
 
 // Initialize Server struct
 func (s *Server) Initialize() {
-	s.initializeDB()
+	s.DB = db.InitializeDB()
 	s.initializeRoutes()
 }
 
