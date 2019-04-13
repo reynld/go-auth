@@ -67,14 +67,14 @@ func getDBUri() (string, error) {
 	return dburi, nil
 }
 
-// initializeDB connects to DB
-func initializeDB(db *sql.DB) {
+// InitializeDB connects to DB
+func InitializeDB() *sql.DB {
 	dburi, err := getDBUri()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	db, err = sql.Open("postgres", dburi)
+	db, err := sql.Open("postgres", dburi)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,6 +82,8 @@ func initializeDB(db *sql.DB) {
 	if err = db.Ping(); err != nil {
 		log.Fatal(err)
 	}
+
+	return db
 }
 
 // RunMigrations runs migrations on database
