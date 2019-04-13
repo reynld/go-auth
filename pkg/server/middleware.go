@@ -50,7 +50,9 @@ func (s *Server) Protected(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), string("username"), claims.Username)
+		ctx := r.Context()
+		ctx = context.WithValue(ctx, string("username"), claims.Username)
+		ctx = context.WithValue(ctx, string("id"), claims.ID)
 
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
