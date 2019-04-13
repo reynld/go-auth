@@ -21,10 +21,12 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 func Welcome(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	username, ok := ctx.Value(string("username")).(string)
+	id, ok := ctx.Value(string("id")).(int)
 	if !ok {
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
-	w.Write([]byte(fmt.Sprintf("Welcome %s!", username)))
+	w.Write([]byte(fmt.Sprintf("user:%s, id:%d", username, id)))
 }
 
 // GetServerIsUp '/' endpoint cheks if server is up
