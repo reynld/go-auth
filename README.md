@@ -1,7 +1,6 @@
-# Shinpo - Backend
+# Default Golang Auth server with Postgress and Redis support
 
 ## Enviroment Variables
-Need Postgress and Redis server to test locally
  
 - ``PORT``- your server PORT
 - ``DB_HOST`` - your database Host URL
